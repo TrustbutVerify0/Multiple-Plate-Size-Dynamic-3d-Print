@@ -44,9 +44,9 @@ this section
 
 
         
-in the same file as gcode_macro START_PRINT
+Now in the same file as you have your gcode_macro START_PRINT;
 
-Add these to your printer config - we are replacing the start_print macro so modify it to suit your printer;
+Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "gcode_macro START_PRINT" - as we are replacing  modify it to suit your printer;
 
 		#====================================================================
 		# GLOBAL CONFIGURATION VARIABLES
@@ -248,7 +248,7 @@ Add these to your printer config - we are replacing the start_print macro so mod
 		    SET_GCODE_VARIABLE MACRO=START_PRINT VARIABLE=state VALUE='"printing"'
 		    {action_respond_info("Print start sequence complete")}
 
-Add in the new quad gantry level command, this replaces the built in one to allow POINTS to be used:
+Add in the new quad gantry level command, this dynamically replaces the built in qgl but we leave the original [QUAD_GANTRY_LEVEL_BASE] in the file for certain cases where we use a 350x350 plate, this change allows POINTS to be integrated:
 
     [gcode_macro QUAD_GANTRY_LEVEL]
     rename_existing: QUAD_GANTRY_LEVEL_BASE
@@ -282,9 +282,9 @@ Add in the new quad gantry level command, this replaces the built in one to allo
             M140 S0
         {% endif %}
 
-Now in Slicer or choise make these change to the gcode. This is specific to Orca Slicer
+Now in Slicer of choice make these change to the gcode section. This is specific to Orca Slicer
 ZOFFSET may also be needed because different plates have different thickness'
-Set the plate x-y dimension as a single figure, ie a square of 310 as below    
+Set the plate x-y dimension as a single figure, ie a square of 310 as below   eg PLATE_SIZE=310 ZOFFSET=0.0
 
     SET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]
     START_PRINT PLATE_SIZE=310 ZOFFSET=0.0 EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature] FILAMENT=[filament_type] LAYER=[layer_height] BED_SIZE_X={print_bed_max[0]} BED_SIZE_Y={print_bed_max[1]}

@@ -8,7 +8,6 @@ To allow the defaul Klipper QGL to accept a points parameter we need to change t
 Replace this section with:
 
     def cmd_QUAD_GANTRY_LEVEL(self, gcmd):
-                # Check for a POINTS parameter in the G-Code command
         self.z_status.reset()
         self.retry_helper.start(gcmd)
         self.probe_helper.start_probe(gcmd)

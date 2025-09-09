@@ -1,3 +1,5 @@
+The problem: i have a 350x350 printer but multiple old plates with different textures and hologrm effects and dimensions that i want to use with the new printer.
+
 This is configured and working on the SOVOL SV08
 I use this to allow me to safely use different sized plates, ie a 256x256 plate on the SV08 350x350 bed.
 I avoid bed crashes by configurein QGL dynamically and ALWAYS centering the plate on the bed. 

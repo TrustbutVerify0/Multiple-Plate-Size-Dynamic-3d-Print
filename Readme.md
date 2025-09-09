@@ -46,7 +46,7 @@ this section
         
 in the same file as gcode_macro START_PRINT
 
-Add these config;
+Add these to your printer config - we are replacing the start_print macro so modify it to suit your printer;
 
 		#====================================================================
 		# GLOBAL CONFIGURATION VARIABLES

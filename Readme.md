@@ -5,8 +5,8 @@ I use this to allow me to safely use different sized plates, ie a 256x256 plate 
 I avoid bed crashes by configurein QGL dynamically and ALWAYS centering the plate on the bed. 
 The macro's below take care of the calculations for the QGL points and purge position offset
 
-To allow the defaul Klipper QGL to accept a points parameter we need to change the file below on the printer Klipper OS.
-/home/biqu/klipper/klippy/extras/quad_gantry_level.py
+To allow the defaul Klipper QGL to accept a points parameter we need to add this option to the default klipper qgl command; change the file below on the printer Klipper OS.
+**/home/biqu/klipper/klippy/extras/quad_gantry_level.py
 Replace this section with:
 
     def cmd_QUAD_GANTRY_LEVEL(self, gcmd):

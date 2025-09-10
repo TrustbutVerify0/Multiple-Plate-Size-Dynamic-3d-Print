@@ -5,8 +5,8 @@ I use this to allow me to safely use different sized plates, ie a 256x256 plate 
 I avoid bed crashes by configurein QGL dynamically and ALWAYS centering the plate on the bed. 
 The macro's below take care of the calculations for the QGL points and purge position offset
 
-To allow the defaul Klipper QGL to accept a points parameter we need to add this option to the default klipper qgl command; change the file below on the printer Klipper OS.
-**/home/biqu/klipper/klippy/extras/quad_gantry_level.py
+To allow the defaul Klipper QGL to accept a points parameter we need to add this option to the default klipper qgl command; 
+Open this file on the printer Klipper OS: **/home/biqu/klipper/klippy/extras/quad_gantry_level.py**
 Replace this section with:
 
     def cmd_QUAD_GANTRY_LEVEL(self, gcmd):
@@ -46,9 +46,9 @@ this section
 
 
         
-Now in the same file as you have your gcode_macro START_PRINT;
+Now in the same file as you have your gcode_macro START_PRINT on your printer OS;
 
-Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "gcode_macro START_PRINT" - as we are replacing  modify it to suit your printer;
+Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "gcode_macro START_PRINT" - as we are replacing modify it to suit your printer;
 
 		#====================================================================
 		# GLOBAL CONFIGURATION VARIABLES
@@ -152,26 +152,11 @@ Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "
 		    _SAFE_HOME ;!! use your equivalent here instead i use a macro
 		        
 		    # Preheat extruder for bed leveling
-		    {% if printer.extruder.temperature < config.temperatures.extruder_preheat %}
-		        {action_respond_info("Preheating nozzle...")}
-		        M104 S{config.temperatures.extruder_preheat}
-		        _WAIT_FOR_TEMPERATURE SENSOR=extruder TARGET={config.temperatures.extruder_preheat}
-		    {% endif %}
-		    
+	  		;!! insert your own printeres heating code here
+
 		    # Heat bed
-		    {% if printer.heater_bed.temperature < bed_target %}
-		        {action_respond_info("Heating bed to " + bed_target|string + "°C...")}
-		        M140 S{bed_target}
-		        _WAIT_FOR_TEMPERATURE SENSOR=heater_bed TARGET={bed_target}
-		    {% endif %}
-		    M400
-		    # Heat soak if requested
-		    {% if heatsoak and config.timings.heat_soak > 0 %}
-		        {action_respond_info("Heat soaking for " + config.timings.heat_soak|string + " minutes")}
-		        G4 P{config.timings.heat_soak * 60000}
-		    {% endif %}
-		    
-		
+	  		;!! insert your own printeres heating code here
+	 
 		    {% if explicit_points %}
 		        {action_respond_info("Performing quad gantry level with explicit points: " + explicit_points)}
 		        quad_gantry_level POINTS={explicit_points}
@@ -207,23 +192,19 @@ Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "
 		        {action_raise_error("Bed mesh calibration failed completely")}
 		    {% endif %}
 		    
-			# SET ZOFFSET FROM SALICER PARAMS    
+			# SET ZOFFSET FROM SLICER PARAMS    
 		    # Apply Z offset if specified
 		    {% if zoffset != 0 %}
 		        {action_respond_info("Applying Z offset: " + zoffset|string + "mm")}
 		        SET_GCODE_OFFSET Z={zoffset}
-		    {% endif %}
-		    #/// SET ZOFFSET FROM SALICER PARAMS
-		
+		    {% endif %}		
 			
 		    M400  #await all phsical moves before printing more messages
 		    
 		    # Final heating
 		    {action_respond_info("Final heating...")}
-		    M140 S{bed_target}
-		    M104 S{extruder_target}
-		    _WAIT_FOR_TEMPERATURE SENSOR=heater_bed TARGET={bed_target}
-		    _WAIT_FOR_TEMPERATURE SENSOR=extruder TARGET={extruder_target}
+		    M190 S{bed_target}
+		    M109 S{extruder_target}
 		    
 		    #
 		    # Dynamic Purge Line
@@ -250,7 +231,8 @@ Add the GLOBAL CONFIGURATION VARIABLES to your printer config and replace your "
 		    SET_GCODE_VARIABLE MACRO=START_PRINT VARIABLE=state VALUE='"printing"'
 		    {action_respond_info("Print start sequence complete")}
 
-Add in the new quad gantry level command, this dynamically replaces the built in qgl but we leave the original [QUAD_GANTRY_LEVEL_BASE] in the file for certain cases where we use a 350x350 plate, this change allows POINTS to be integrated:
+So that POINTS can be integrated we Add in the new quad gantry level command, this dynamically replaces the built in qgl but we leave the original [QUAD_GANTRY_LEVEL_BASE] in the file for certain cases where we use a 350x350 plate, ie no points provided < no size specified in slicer :
+NOTE: _WAIT_FOR_TEMPERATURE is SOVOL specific, you can just use your "M190 S{temp}" instead
 
     [gcode_macro QUAD_GANTRY_LEVEL]
     rename_existing: QUAD_GANTRY_LEVEL_BASE
